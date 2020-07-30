@@ -2539,11 +2539,11 @@ console.log(ret);
                             } else if (obj.options.columns[i].type == 'calendar') {
                                 // var date = new Date(value);
                                 // date.setDate(date.getDate() + rowNumber);
-                                var date = new Date(value);
+                                //var date = new Date(value);
                                 //date.setDate(date.getDate() + rowNumber);
-                                var previous_date = new Date(obj.options.data[rowNumber==0 ? j : j-1][colNumber==0 ? i : i -1]);
+                                var date = new Date(obj.options.data[rowNumber==0 ? j : j-1][colNumber==0 ? i : i -1]);
                                 //date.setDate(date.getDate() + rowNumber);
-                                date.setDate(previous_date.getDate() +1 );
+                                date.setDate(date.getDate() +1 );
     
                                 value = date.getFullYear() + '-' + jexcel.doubleDigitFormat(parseInt(date.getMonth() + 1)) + '-' + jexcel.doubleDigitFormat(date.getDate()) + ' ' + '00:00:00';
                             }
