@@ -1081,14 +1081,16 @@ console.log(ret);
             obj.rows[j] = document.createElement('tr');
             obj.rows[j].setAttribute('data-y', j);
             // Definitions
+            var title = parseInt(j + 1);
             if (obj.options.rows[j]) {
+                title = obj.options.rows[j].title;
                 if (obj.options.rows[j].height) {
                     obj.rows[j].style.height = obj.options.rows[j].height;
                 }
             }
             // Row number label
             var td = document.createElement('td');
-            td.innerHTML = obj.options.rows[j].title || parseInt(j + 1);
+            td.innerHTML = title ;
             td.setAttribute('data-y', j);
             td.className = 'jexcel_row';
             obj.rows[j].appendChild(td);
@@ -2535,8 +2537,14 @@ console.log(ret);
                                     }
                                 }
                             } else if (obj.options.columns[i].type == 'calendar') {
+                                // var date = new Date(value);
+                                // date.setDate(date.getDate() + rowNumber);
                                 var date = new Date(value);
-                                date.setDate(date.getDate() + rowNumber);
+                                //date.setDate(date.getDate() + rowNumber);
+                                var previous_date = new Date(obj.options.data[rowNumber==0 ? j : j-1][colNumber==0 ? i : i -1]);
+                                //date.setDate(date.getDate() + rowNumber);
+                                date.setDate(previous_date.getDate() +1 );
+    
                                 value = date.getFullYear() + '-' + jexcel.doubleDigitFormat(parseInt(date.getMonth() + 1)) + '-' + jexcel.doubleDigitFormat(date.getDate()) + ' ' + '00:00:00';
                             }
                         }
@@ -3452,7 +3460,7 @@ console.log(ret);
                 }
             }
     
-            if (k && v) {
+            if (k!=undefined && v!=undefined) {
                 // Get object from string
                 if (typeof(o) == 'string') {
                     applyStyle(o, k, v);
@@ -6082,9 +6090,9 @@ console.log(ret);
          * @param integer row number
          * @return string value
          */
-        obj.paste = function(x, y, data) {
+        obj.paste = function(x, y, data, x2, y2) {
             // Paste filter
-            var ret = obj.dispatch('onbeforepaste', el, data, x, y);
+            var ret = obj.dispatch('onbeforepaste', el, data, x, y, x2, y2);
 
             if (ret === false) {
                 return false;
@@ -6172,7 +6180,7 @@ console.log(ret);
                 obj.updateTable();
     
                 // Paste event
-                obj.dispatch('onpaste', el, data);
+                obj.dispatch('onpaste', el, data, x, y, x2, y2);
     
                 // On after changes
                 obj.onafterchanges(el, records);
@@ -7834,10 +7842,10 @@ console.log(ret);
             if (! jexcel.current.edition) {
                 if (jexcel.current.options.editable == true) {
                     if (e && e.clipboardData) {
-                        jexcel.current.paste(jexcel.current.selectedCell[0], jexcel.current.selectedCell[1], e.clipboardData.getData('text'));
+                        jexcel.current.paste(jexcel.current.selectedCell[0], jexcel.current.selectedCell[1], e.clipboardData.getData('text'),jexcel.current.selectedCell[2], jexcel.current.selectedCell[3]);
                         e.preventDefault();
                     } else if (window.clipboardData) {
-                        jexcel.current.paste(jexcel.current.selectedCell[0], jexcel.current.selectedCell[1], window.clipboardData.getData('text'));
+                        jexcel.current.paste(jexcel.current.selectedCell[0], jexcel.current.selectedCell[1], window.clipboardData.getData('text'),jexcel.current.selectedCell[2], jexcel.current.selectedCell[3]);
                     }
                 }
             }
