@@ -168,6 +168,7 @@
             ondeleterow:null,
             onbeforedeletecolumn:null,
             ondeletecolumn:null,
+            ondeletecell:null,
             onmoverow:null,
             onmovecolumn:null,
             onresizerow:null,
@@ -626,7 +627,7 @@
                 if (typeof(sessionStorage) !== "undefined" && ! sessionStorage.getItem('jexcel')) {
                     sessionStorage.setItem('jexcel', true);
                     var img = document.createElement('img');
-                    img.src = '//bossanova.uk/jexcel/logo.png';
+                    // img.src = '//bossanova.uk/jexcel/logo.png';
                     ads.appendChild(img);
                 }
             } catch (exception) {
@@ -2217,6 +2218,7 @@ console.log(ret);
     
             // On after changes
             obj.onafterchanges(el, records);
+            return{el,records}
         }
     
         /**
@@ -7081,7 +7083,8 @@ console.log(ret);
                             }
                         } else {
                             // Change value
-                            jexcel.current.setValue(jexcel.current.highlighted, '');
+                            let ret=jexcel.current.setValue(jexcel.current.highlighted, '');
+                            jexcel.current.dispatch('ondeletecell', ret.el, ret.records);
                         }
                     }
                 } else if (e.which == 13) {
